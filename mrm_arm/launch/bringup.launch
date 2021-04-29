@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<launch>
+
+
+<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" type="string" value="" />
+</node>
+
+
+<!--rosparam file="$(find ebot_arm)/config/pid.yaml" command="load"/-->
+    
+
+<include file="$(find mrm_arm)/launch/planning_context.launch" >
+    <arg name="load_robot_description" value="true" />
+</include>
+  
+<node name="joint_state_publisher_moveit" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/>
+    <rosparam param="/source_list">[/joint_states]</rosparam>
+</node>
+  
+<include file="$(find mrm_arm)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+ </include>
+  
+</launch>
